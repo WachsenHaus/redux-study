@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js" integrity="sha512-hIeMcj07bbpdm6W49lxdLrW7D1eLJF54UP0dQ7Ts3mPqa/Zjc51zI7l1A+QlHhijEluigbBfwLM9YkkLmtkb0A==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.js"></script>
     <title>Document</title>
     <style>
         .container{
@@ -17,7 +17,6 @@
     <div  id="blue"></div>
     <div  id="green"></div>
     <script>
-
         function reducer(state,action){
             console.log(state,action);
             if(state === undefined)
@@ -31,8 +30,13 @@
             }
             return newState;
         }
-
-        let store = Redux.createStore(reducer);
+        console.log(window.__REDUX_DEVTOOLS_EXTENSION__);
+        const store = Redux.createStore(
+            
+            reducer,
+            window.__REDUX_DEVTOOLS_EXTENSION__ && 
+            window.__REDUX_DEVTOOLS_EXTENSION__()
+        );
         
         function red() {
             console.log("레드함수실행")

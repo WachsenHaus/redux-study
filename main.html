@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="subject"></div>
+    <div id="toc"></div>
+    <div id="control"></div>
+    <div id="content"></div>
+    <script>
+        function subjuect(){
+            document.querySelector("#subject").innerHTML =`
+            <header>
+                <h1>web</h1>
+                Hello,WEB!
+             </header>
+            `
+        }
+        //toc는 목록을 나타낼때 쓰는말 토픽 테이블 오브 컨텐트
+        function TOC(){
+            const state = store.getState();
+            let i = 0 ;
+            let liTags = '';
+            while(i<state.contents.length){
+                liTags = liTags+ `
+                <li>
+                    <a onclick="event.preventDefault();
+                    const action = {type:'SELECT',id:${state.contents[i].id}};
+                    store.dispatch(action);" 
+                    href="${state.contents[i].id}">${state.contents[i].title}</a>
+                </li>`;
+                i= i+1;
+            }
+            document.querySelector("#toc").innerHTML = ` 
+            <nav>
+                <ol>${liTags}</ol>
+            </nav>`;
+        }
+        function control(){
+            document.querySelector("#control").innerHTML = ` 
+            <ul>
+                <li><a href="/create">create</a></li>
+                <li><input type="button" value="delete"></li>
+            </ul>`;
+        }
+        function article(){
+            let state = store.getState();
+            let i =0;
+            let aTitle,aDesc;
+            while(i<state.contents.length){
+                if(state.contents[i].id === state.selected_id){
+                    aTitle = state.contents[i].title;
+                    aDesc = state.contents[i].desc;
+                    break;
+                }
+                i = i+1;
+            }
+            document.querySelector("#content").innerHTML = `
+            <article>
+               <h2>${aTitle}</h2>
+                ${aDesc}
+            </article>`;
+        }
+       
+
+
+        function reducer(state,action) {
+            console.log(action);
+            let newState = {};
+            if(state === undefined){
+                return {
+                    selected_id : 1,
+                    contents:[
+                        {id:1,title:'HTML2',desc:"html is .."},
+                        {id:2,title:"CSS",desc:"CSS is .."}
+                    ]
+                }
+            }
+            switch(action.type){
+                case 'SELECT':
+                    newState = {...state,selected_id:action.id}
+                    break;
+                default:
+                    break;
+            }
+            return newState;
+        }
+        const store = Redux.createStore(reducer);
+        store.subscribe(article);
+
+        subjuect();
+        TOC();
+        control();
+        article();
+    </script>
+</body>
+</html>
